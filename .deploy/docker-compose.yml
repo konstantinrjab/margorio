@@ -7,7 +7,6 @@ services:
       context: ./php-fpm
     volumes:
       - ../:/var/www
-    user: ${DOCKER_USER}
     networks:
       mrg_network:
 
