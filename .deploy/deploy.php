@@ -2,6 +2,8 @@
 
 // TODO: check header: X-Hub-Signature
 
+echo 'Start job...';
+
 exec('cd ../ && git pull origin master', $output);
 print_r($output);
 
