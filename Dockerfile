@@ -11,6 +11,4 @@ COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
 COPY . .
 
-RUN composer install
-
 CMD ["php-fpm"]
