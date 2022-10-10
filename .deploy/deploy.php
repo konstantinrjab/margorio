@@ -6,11 +6,11 @@ echo '<pre>';
 echo "Start job...\n";
 
 echo "\nGit pull\n";
-exec('cd /var/www && git pull origin master > /dev/null 2>&1 &', $output);
+exec('cd /var/www && git pull origin master 2>&1', $output);
 print_r($output);
 
 echo "\nComposer install\n";
-exec('cd /var/www && composer install > /dev/null 2>&1 &', $output);
+exec('cd /var/www && composer install 2>&1', $output);
 print_r($output);
 
 echo "\nMigrate\n";
