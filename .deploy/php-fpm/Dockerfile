@@ -9,8 +9,10 @@ RUN docker-php-ext-configure gd --enable-gd --with-jpeg \
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 
-COPY . .
-
-RUN composer install
+COPY php.ini $PHP_INI_DIR
 
 CMD ["php-fpm"]
+
+EXPOSE 9003
+
+WORKDIR /var/www
