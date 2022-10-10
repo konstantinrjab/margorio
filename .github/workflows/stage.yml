@@ -1,0 +1,50 @@
+name: Deploy stage
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Configure SSH
+        run: |
+          if ! test -f ~/.ssh/mrg_stage; then
+            mkdir -p ~/.ssh/
+            echo "$SSH_KEY" > ~/.ssh/mrg_stage.key
+            chmod 600 ~/.ssh/mrg_stage.key
+            cat >>~/.ssh/config <<END
+          Host mrg_stage
+          HostName $SSH_HOST
+          User $SSH_USER
+          IdentityFile ~/.ssh/mrg_stage.key
+          StrictHostKeyChecking no
+          END
+          fi
+          ssh-keyscan -H ${{secrets.STG_SSH_HOST}} > ~/.ssh/known_hosts
+        env:
+          SSH_USER: ${{ secrets.STG_SSH_USER }}
+          SSH_KEY: ${{ secrets.STG_SSH_KEY }}
+          SSH_HOST: ${{ secrets.STG_SSH_HOST }}
+
+      - name: Deploy with rsync
+        run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".env*" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ./* ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
+
+      - name: Clear cache
+        run: ssh mrg_stage 'cd ${{ secrets.STG_ROOT_PATH }}/fuel/application/cache && find . ! -name '.gitignore' -type f -exec rm -f {} + && cd ${{ secrets.STG_ROOT_PATH }} && rm -rf var/cache/routes_public && php bin/console cache:clear'
+
+      - name: Run  migrations
+        run: ssh mrg_stage 'docker exec mrg_php bash -c "php vendor/bin/doctrine migrations:migrate && php vendor/bin/doctrine orm:generate-proxies"'
