@@ -2,6 +2,7 @@
 
 // TODO: check header: X-Hub-Signature
 
+echo '<pre>';
 echo "Start job...\n\n";
 
 echo "Git pull\n\n";
@@ -20,3 +21,4 @@ echo "Clear Cache\n\n";
 exec('php ../artisan route:cache', $output);
 print_r($output);
 
+echo '</pre>';
