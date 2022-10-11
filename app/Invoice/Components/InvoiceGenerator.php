@@ -22,11 +22,17 @@ class InvoiceGenerator
      */
     public function generate(Employee $employee, string $type, Carbon $date, int $invoiceNumber, int $amount): Pdf
     {
-        $templateName = match ($type) {
-            static::TYPE_FULL => 'invoice.invoice_full',
-            static::TYPE_PROBATION => 'invoice.invoice_probation',
-            default => throw new RuntimeException('invalid invoice type'),
-        };
+        if ($type == static::TYPE_FULL) {
+            $templateName = 'invoice.invoice_full';
+            $invoiceData = $employee->invoice_data['full'];
+
+        } elseif ($type == static::TYPE_PROBATION) {
+            $templateName = 'invoice.invoice_probation';
+            $invoiceData = $employee->invoice_data['probation'];
+
+        } else {
+            throw new RuntimeException('invalid invoice type');
+        }
 
         $html = view($templateName, [
             'invoice_number'         => $invoiceNumber,
@@ -35,14 +41,14 @@ class InvoiceGenerator
             'from_en'                => '',
             'from_uk'                => '',
             'tax_number'             => $employee->tax_number,
-            'address_en'             => $employee->address_en,
-            'address_uk'             => $employee->address_uk,
-            'bank_details_en'        => $employee->bank_details_en,
-            'bank_details_uk'        => $employee->bank_details_uk,
-            'invoice_subject_en'     => $employee->invoice_subject_en,
-            'invoice_subject_uk'     => $employee->invoice_subject_uk,
-            'invoice_description_en' => $employee->invoice_description_en,
-            'invoice_description_uk' => $employee->invoice_description_uk,
+            'address_en'             => $invoiceData['address_en'],
+            'address_uk'             => $invoiceData['address_uk'],
+            'bank_details_en'        => $invoiceData['bank_details_en'],
+            'bank_details_uk'        => $invoiceData['bank_details_uk'],
+            'invoice_subject_en'     => $invoiceData['subject_en'],
+            'invoice_subject_uk'     => $invoiceData['subject_uk'],
+            'invoice_description_en' => $invoiceData['description_en'],
+            'invoice_description_uk' => $invoiceData['description_uk'],
             'amount'                 => $amount,
             'full_name_en'           => $employee->full_name_en,
             'full_name_uk'           => $employee->full_name_uk,

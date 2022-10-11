@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Artisan::call('orchid:admin', ['name' => 'admin', 'email' => 'admin@admin.loc', 'password' => '123123']);
+        Artisan::call('orchid:admin', ['name' => 'admin', 'email' => 'admin@admin.com', 'password' => '123123']);
 
         Employee::factory(5)->create();
     }

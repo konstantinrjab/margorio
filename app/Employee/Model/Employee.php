@@ -19,19 +19,13 @@ class Employee extends Model
         'full_name_en',
         'full_name_uk',
         'tax_number',
-        'address_en',
-        'address_uk',
-        'bank_details_en',
-        'bank_details_uk',
-        'invoice_subject_en',
-        'invoice_subject_uk',
-        'invoice_description_en',
-        'invoice_description_uk',
+        'invoice_data',
         'last_invoice_number',
         'last_invoice_generated_at',
     ];
 
     protected $casts = [
+        'invoice_data'              => 'array',
         'last_invoice_number'       => 'int',
         'last_invoice_generated_at' => 'date',
     ];
