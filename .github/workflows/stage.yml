@@ -27,10 +27,6 @@ jobs:
         with:
           args: --ignore-platform-reqs
 
-  deploy:
-    runs-on: [ ubuntu-latest ]
-    needs: build
-    steps:
       - name: Configure SSH
         run: |
           if ! test -f ~/.ssh/mrg_stage; then
