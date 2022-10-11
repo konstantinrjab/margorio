@@ -48,7 +48,7 @@ jobs:
         run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".deploy" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ${{ github.workspace }}/ ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
 
       - name: Clear cache
-        run: ssh mrg_stage 'docker exec mrg_php bash -c "cd ${{ secrets.STG_ROOT_PATH }} && php artisan route:cache"'
+        run: ssh mrg_stage 'docker exec mrg_php bash -c "cd /var/www && php artisan route:cache"'
 
       - name: Run  migrations
-        run: ssh mrg_stage 'docker exec mrg_php bash -c "php artisan migrate --force"'
+        run: ssh mrg_stage 'docker exec mrg_php bash -c "cd /var/www && php artisan migrate --force"'
