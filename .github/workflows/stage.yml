@@ -24,6 +24,8 @@ jobs:
 
       - name: Composer install
         uses: php-actions/composer@v6
+        with:
+          args: --ignore-platform-reqs
 
   deploy:
     runs-on: [ ubuntu-latest ]
