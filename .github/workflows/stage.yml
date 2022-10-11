@@ -45,7 +45,7 @@ jobs:
           SSH_HOST: ${{ secrets.STG_SSH_HOST }}
 
       - name: Deploy with rsync
-        run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".env*" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ./* ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
+        run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".env*" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ${{ github.workspace }}/ ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
 
       - name: Clear cache
         run: ssh mrg_stage 'cd ${{ secrets.STG_ROOT_PATH }} && php artisan route:cache'
