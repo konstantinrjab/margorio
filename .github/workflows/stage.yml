@@ -47,11 +47,17 @@ jobs:
           SSH_KEY: ${{ secrets.STG_SSH_KEY }}
           SSH_HOST: ${{ secrets.STG_SSH_HOST }}
 
+      - name: Create env files
+        run: |
+          cat >>${{ github.workspace }}/.env <<'EOF'
+          ${{ secrets.STG_ENV_FILE }}
+          EOF
+
       - name: Deploy with rsync
-        run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".deploy" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ${{ github.workspace }}/ ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
+        run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".env" --include=".deploy" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ${{ github.workspace }}/ ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
 
       - name: Clear cache
-        run: ssh mrg_stage 'docker exec mrg_php bash -c "cd /var/www && php artisan route:cache"'
+        run: ssh mrg_stage 'docker exec mrg_php bash -c "cd /var/www && php artisan route:cache && php artisan config:cache"'
 
       - name: Run  migrations
         run: ssh mrg_stage 'docker exec mrg_php bash -c "cd /var/www && php artisan migrate --force"'
