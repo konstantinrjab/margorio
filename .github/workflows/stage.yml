@@ -20,6 +20,9 @@ jobs:
           path: /tmp/composer-cache
           key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
+  deploy:
+    runs-on: [ ubuntu-latest ]
+    steps:
       - name: Configure SSH
         run: |
           if ! test -f ~/.ssh/mrg_stage; then
@@ -44,7 +47,7 @@ jobs:
         run: rsync -avz --no-perms --no-owner --no-group --omit-dir-times --no-t --include=".env*" --exclude=".*" -e "ssh -i $HOME/.ssh/mrg_stage.key" ./* ${{ secrets.STG_SSH_USER }}@${{ secrets.STG_SSH_HOST }}:${{ secrets.STG_ROOT_PATH }}
 
       - name: Clear cache
-        run: ssh mrg_stage 'cd ${{ secrets.STG_ROOT_PATH }}/fuel/application/cache && find . ! -name '.gitignore' -type f -exec rm -f {} + && cd ${{ secrets.STG_ROOT_PATH }} && rm -rf var/cache/routes_public && php bin/console cache:clear'
+        run: ssh mrg_stage 'cd ${{ secrets.STG_ROOT_PATH }} && php artisan route:cache'
 
       - name: Run  migrations
-        run: ssh mrg_stage 'docker exec mrg_php bash -c "php vendor/bin/doctrine migrations:migrate && php vendor/bin/doctrine orm:generate-proxies"'
+        run: ssh mrg_stage 'docker exec mrg_php bash -c "php artisan migrate --force"'
