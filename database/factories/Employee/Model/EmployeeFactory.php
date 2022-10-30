@@ -33,16 +33,18 @@ class EmployeeFactory extends Factory
                     'subject_uk'      => fake('uk_UA')->word(),
                     'description_en'  => $description = fake()->text(50),
                     'description_uk'  => fake('uk_UA')->text(50),
+                    'number'       => fake()->numberBetween(1, 5),
+                    'generated_at' => fake()->dateTimeBetween('-5 month')->format('Y-m-d'),
                 ],
                 'probation' => [
                     'address_en'      => $address . ' probation',
                     'bank_details_en' => $bankDetails . ' probation',
                     'subject_en'      => $subject . ' probation',
                     'description_en'  => $description . ' probation',
+                    'number'       => fake()->numberBetween(1, 5),
+                    'generated_at' => fake()->dateTimeBetween('-5 month')->format('Y-m-d'),
                 ],
             ],
-            'last_invoice_number'       => fake()->numberBetween(1, 5),
-            'last_invoice_generated_at' => fake()->dateTimeBetween('-5 month'),
         ];
     }
 }

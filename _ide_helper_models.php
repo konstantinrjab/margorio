@@ -65,8 +65,6 @@ namespace App\Employee\Model{
  * @property string $full_name_uk
  * @property string $tax_number
  * @property array $invoice_data
- * @property int $last_invoice_number
- * @property \Illuminate\Support\Carbon $last_invoice_generated_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -85,8 +83,6 @@ namespace App\Employee\Model{
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereFullNameUk($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereInvoiceData($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Employee whereLastInvoiceGeneratedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Employee whereLastInvoiceNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Employee withTrashed()

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Invoice\Orchid;
 
 use App\Employee\Model\Employee;
-use App\Invoice\Components\InvoiceGenerator;
+use App\Invoice\Components\InvoiceService;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\Input;
 use Orchid\Screen\Fields\Select;
@@ -34,7 +34,7 @@ class InvoicePercentageScreen extends Screen
             Layout::rows([
 
                 Select::make(__('Employee'))
-                    ->options([InvoiceGenerator::TYPE_FULL => 'Full', InvoiceGenerator::TYPE_PROBATION => 'Probation'])
+                    ->options([InvoiceService::TYPE_FULL => 'Full', InvoiceService::TYPE_PROBATION => 'Probation'])
                     ->required()
                     ->title('Employee'),
 

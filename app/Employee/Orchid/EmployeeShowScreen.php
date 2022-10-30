@@ -48,8 +48,6 @@ class EmployeeShowScreen extends Screen
                 Sight::make('full_name_uk', 'Full Name UK'),
                 Sight::make('tax_number', 'Tax Number'),
                 Sight::make('invoice_data', 'Invoice Data')->render(fn ($e) => '<pre>' . json_encode($e->invoice_data, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) . '</pre>'),
-                Sight::make('last_invoice_number', 'Last Invoice Number'),
-                Sight::make('last_invoice_generated_at', 'Last Invoice Generated At')->render(fn($e) => $e->last_invoice_generated_at->format('Y-m-d')),
 
             ]),
         ];

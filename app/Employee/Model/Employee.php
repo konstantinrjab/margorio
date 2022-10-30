@@ -20,27 +20,21 @@ class Employee extends Model
         'full_name_uk',
         'tax_number',
         'invoice_data',
-        'last_invoice_number',
-        'last_invoice_generated_at',
     ];
 
     protected $casts = [
-        'invoice_data'              => 'array',
-        'last_invoice_number'       => 'int',
-        'last_invoice_generated_at' => 'date',
+        'invoice_data' => 'array',
     ];
 
     public $allowedSorts = [
         'full_name_en',
         'full_name_uk',
         'tax_number',
-        'last_invoice_generated_at',
     ];
 
     protected $allowedFilters = [
         'full_name_en',
         'full_name_uk',
         'tax_number',
-        'last_invoice_generated_at',
     ];
 }

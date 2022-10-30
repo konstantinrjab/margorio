@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('full_name_uk');
             $table->string('tax_number');
             $table->json('invoice_data');
-            $table->integer('last_invoice_number');
-            $table->date('last_invoice_generated_at');
             $table->timestamps();
             $table->softDeletes();
         });

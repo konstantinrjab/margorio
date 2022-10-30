@@ -62,6 +62,9 @@ class EmployeeEditScreen extends Screen
                         ->required()
                         ->title(__('Full Name UK')),
                 ]),
+                Input::make('employee.tax_number')
+                    ->required()
+                    ->title(__('Tax Number')),
             ]),
 
             Layout::tabs([
@@ -98,6 +101,14 @@ class EmployeeEditScreen extends Screen
                             ->required()
                             ->title(__('Subject UK')),
                     ]),
+                    Input::make('employee.invoice_data.probation.number')
+                        ->type('number')
+                        ->title(__('Last Number')),
+                    DateTimer::make('employee.invoice_data.full.generated_at')
+                        ->enableTime(false)
+                        ->format('Y-m-d')
+                        ->allowInput()
+                        ->title(__('Generated At')),
                 ]),
                 'Probation Invoice' => Layout::rows([
                     Input::make('employee.invoice_data.probation.bank_details_en')
@@ -109,31 +120,19 @@ class EmployeeEditScreen extends Screen
                     Input::make('employee.invoice_data.probation.address_en')
                         ->required()
                         ->title(__('Address EN')),
-                    Input::make('employee.invoice_data.full.subject_en')
+                    Input::make('employee.invoice_data.probation.subject_en')
                         ->required()
                         ->title(__('Subject EN')),
+                    Input::make('employee.invoice_data.probation.number')
+                        ->type('number')
+                        ->title(__('Last Number')),
+                    DateTimer::make('employee.invoice_data.probation.generated_at')
+                        ->enableTime(false)
+                        ->format('Y-m-d')
+                        ->allowInput()
+                        ->title(__('Generated At')),
                 ]),
             ]),
-
-            Layout::rows([
-                Input::make('employee.tax_number')
-                    ->required()
-                    ->title(__('Tax Number')),
-
-                Input::make('employee.last_invoice_number')
-                    ->required()
-                    ->value(1)
-                    ->type('number')
-                    ->title(__('Last Invoice Number')),
-
-                DateTimer::make('employee.last_invoice_generated_at')
-                    ->enableTime(false)
-                    ->required()
-                    ->format24hr()
-                    ->allowInput()
-                    ->title(__('Invoice Generated At')),
-            ]),
-
         ];
     }
 

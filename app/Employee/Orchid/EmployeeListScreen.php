@@ -53,10 +53,6 @@ class EmployeeListScreen extends Screen
                     ->sort()
                     ->filter()
                 ,
-                TD::make('last_invoice_generated_at', __('Last Invoice Generated At'))
-                    ->sort()
-                    ->render(fn($e) => $e->last_invoice_generated_at->format('Y-m-d'))
-                ,
 
                 TD::make(__('Actions'))
                     ->align(TD::ALIGN_CENTER)
