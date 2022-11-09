@@ -64,12 +64,12 @@
         <td colspan="2">
             <span style="font-weight: bold">Bank details:</span>
             <br>
-            {{ nl2br($bank_details_en) }}
+            {{ $bank_details_en }}
         </td>
         <td colspan="2">
             <span style="font-weight: bold">Банківські реквізити:</span>
             <br>
-            {{ nl2br($bank_details_uk) }}
+            {{ $bank_details_uk }}
         </td>
     </tr>
     <tr>
