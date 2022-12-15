@@ -69,6 +69,8 @@ namespace App\Employee\Model{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int $rate
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Reimbursement\Model\Reimbursement[] $reimbursement
+ * @property-read int|null $reimbursement_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\SalaryCalculation\Model\SalaryCalculation[] $salaryCalculation
  * @property-read int|null $salary_calculation_count
  * @method static \Illuminate\Database\Eloquent\Builder|Employee defaultSort(string $column, string $direction = 'asc')
@@ -93,6 +95,45 @@ namespace App\Employee\Model{
  * @method static \Illuminate\Database\Query\Builder|Employee withoutTrashed()
  */
 	class IdeHelperEmployee {}
+}
+
+namespace App\Reimbursement\Model{
+/**
+ * App\Reimbursement\Model\Reimbursement
+ *
+ * @property int $id
+ * @property int $employee_id
+ * @property string $description
+ * @property int $amount
+ * @property \Illuminate\Support\Carbon $date
+ * @property bool $approved
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Employee\Model\Employee|null $employee
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement defaultSort(string $column, string $direction = 'asc')
+ * @method static \Database\Factories\Reimbursement\Model\ReimbursementFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement filtersApply(iterable $filters = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement filtersApplySelection($class)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement newQuery()
+ * @method static \Illuminate\Database\Query\Builder|Reimbursement onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereApproved($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereEmployeeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|Reimbursement withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|Reimbursement withoutTrashed()
+ * @mixin \Eloquent
+ */
+	class IdeHelperReimbursement {}
 }
 
 namespace App\SalaryCalculation\Model{

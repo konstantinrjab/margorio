@@ -40,6 +40,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('dollar')
                 ->route('platform.salaryCalculation.list')
             ,
+            Menu::make('Reimbursement')
+                ->icon('action-undo')
+                ->route('platform.reimbursement.list')
+            ,
         ];
     }
 

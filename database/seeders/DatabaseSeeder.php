@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Employee\Model\Employee;
+use App\Reimbursement\Model\Reimbursement;
 use App\SalaryCalculation\Model\SalaryCalculation;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
@@ -20,9 +21,8 @@ class DatabaseSeeder extends Seeder
         Artisan::call('orchid:admin', ['name' => 'admin', 'email' => 'admin@admin.com', 'password' => '123123']);
 
         Employee::factory(5)
-            ->has(
-                SalaryCalculation::factory(5)
-            )
+            ->has(SalaryCalculation::factory(5))
+            ->has(Reimbursement::factory(10))
             ->create();
     }
 }

@@ -104,3 +104,9 @@ Route::screen('salary-calculation/create', \App\SalaryCalculation\Orchid\SalaryC
 Route::screen('salary-calculation/{salaryCalculation?}/edit', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.edit');
 Route::screen('salary-calculation/{salaryCalculation?}', \App\SalaryCalculation\Orchid\SalaryCalculationShowScreen::class)->name('platform.salaryCalculation.show');
 Route::screen('salary-calculations', \App\SalaryCalculation\Orchid\SalaryCalculationListScreen::class)->name('platform.salaryCalculation.list');
+
+// reimbursement
+Route::screen('reimbursement/create', \App\Reimbursement\Orchid\ReimbursementEditScreen::class)->name('platform.reimbursement.create');
+Route::screen('reimbursement/{reimbursement?}/edit', \App\Reimbursement\Orchid\ReimbursementEditScreen::class)->name('platform.reimbursement.edit');
+Route::screen('reimbursement/{reimbursement?}', \App\Reimbursement\Orchid\ReimbursementShowScreen::class)->name('platform.reimbursement.show');
+Route::screen('reimbursements', \App\Reimbursement\Orchid\ReimbursementListScreen::class)->name('platform.reimbursement.list');
