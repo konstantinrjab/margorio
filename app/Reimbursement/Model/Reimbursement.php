@@ -31,6 +31,7 @@ class Reimbursement extends Model
     ];
 
     public $allowedSorts = [
+        'employee_id',
         'date',
     ];
 

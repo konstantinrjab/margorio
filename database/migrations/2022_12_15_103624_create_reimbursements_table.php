@@ -22,6 +22,10 @@ return new class extends Migration
             $table->boolean('approved');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees');
         });
     }
 

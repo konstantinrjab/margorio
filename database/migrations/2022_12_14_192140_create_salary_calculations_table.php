@@ -13,10 +13,6 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function (Blueprint $table) {
-            $table->unsignedInteger('rate')->default(0);
-        });
-
         Schema::create('salary_calculations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
@@ -25,6 +21,10 @@ return new class extends Migration
             $table->date('date');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees');
         });
     }
 
@@ -36,9 +36,5 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('salary_calculations');
-
-        Schema::table('employees', function (Blueprint $table) {
-            $table->dropColumn('rate');
-        });
     }
 };

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('full_name_uk');
             $table->string('tax_number');
             $table->json('invoice_data');
+            $table->unsignedInteger('rate')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
