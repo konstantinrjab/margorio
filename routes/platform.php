@@ -97,5 +97,10 @@ Route::screen('employee/{employee?}', \App\Employee\Orchid\EmployeeShowScreen::c
 Route::screen('employees', \App\Employee\Orchid\EmployeeListScreen::class)->name('platform.employee.list');
 
 // invoices
-Route::screen('invoices', \App\Invoice\Orchid\InvoiceGenerationScreen::class)->name('platform.invoice.generation');
-Route::screen('invoices/percentage', \App\Invoice\Orchid\InvoicePercentageScreen::class)->name('platform.invoice.percentage');
+Route::screen('invoices/generation', \App\Invoice\Orchid\InvoiceGenerationScreen::class)->name('platform.invoice.generation');
+
+// salary
+Route::screen('salary-calculation/create', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.create');
+Route::screen('salary-calculation/{salaryCalculation?}/edit', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.edit');
+Route::screen('salary-calculation/{salaryCalculation?}', \App\SalaryCalculation\Orchid\SalaryCalculationShowScreen::class)->name('platform.salaryCalculation.show');
+Route::screen('salary-calculations', \App\SalaryCalculation\Orchid\SalaryCalculationListScreen::class)->name('platform.salaryCalculation.list');

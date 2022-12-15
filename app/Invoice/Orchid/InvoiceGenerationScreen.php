@@ -6,7 +6,7 @@ namespace App\Invoice\Orchid;
 
 use App\Employee\Model\Employee;
 use App\Invoice\Components\InvoiceService;
-use App\Invoice\Request\GenerateRequest;
+use App\Invoice\Orchid\Request\GenerateInvoiceRequest;
 use Carbon\Carbon;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
@@ -131,7 +131,7 @@ class InvoiceGenerationScreen extends Screen
         ];
     }
 
-    public function generate(GenerateRequest $request, InvoiceService $invoiceService)
+    public function generate(GenerateInvoiceRequest $request, InvoiceService $invoiceService)
     {
         $employeesData = $this->prepareDataForGeneration($request);
 
@@ -159,10 +159,10 @@ class InvoiceGenerationScreen extends Screen
     }
 
     /**
-     * @param GenerateRequest $request
+     * @param GenerateInvoiceRequest $request
      * @return array{id: int, amount: int, number: int}
      */
-    protected function prepareDataForGeneration(GenerateRequest $request): array
+    protected function prepareDataForGeneration(GenerateInvoiceRequest $request): array
     {
         $employeesData = $request->input('employees');
         $type = $request->input('invoice_type');

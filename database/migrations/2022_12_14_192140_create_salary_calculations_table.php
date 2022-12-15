@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('employees', function (Blueprint $table) {
+            $table->unsignedInteger('rate')->default(0);
+        });
+
+        Schema::create('salary_calculations', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('employee_id');
+            $table->unsignedInteger('working_days')->nullable();
+            $table->unsignedInteger('days_worked')->nullable();
+            $table->date('date');
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('salary_calculations');
+
+        Schema::table('employees', function (Blueprint $table) {
+            $table->dropColumn('rate');
+        });
+    }
+};

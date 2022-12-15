@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Invoice\Request;
+namespace App\Invoice\Orchid\Request;
 
 use App\Invoice\Components\InvoiceService;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GenerateRequest extends FormRequest
+class GenerateInvoiceRequest extends FormRequest
 {
     public function rules()
     {

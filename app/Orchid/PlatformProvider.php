@@ -36,6 +36,10 @@ class PlatformProvider extends OrchidServiceProvider
                 ->icon('note')
                 ->route('platform.invoice.generation')
             ,
+            Menu::make('Salary Calculation')
+                ->icon('dollar')
+                ->route('platform.salaryCalculation.list')
+            ,
         ];
     }
 

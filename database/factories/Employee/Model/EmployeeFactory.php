@@ -45,6 +45,7 @@ class EmployeeFactory extends Factory
                     'generated_at' => fake()->dateTimeBetween('-5 month')->format('Y-m-d'),
                 ],
             ],
+            'rate' => fake()->numberBetween(1000, 2000),
         ];
     }
 }

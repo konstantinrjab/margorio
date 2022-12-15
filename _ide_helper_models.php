@@ -68,6 +68,9 @@ namespace App\Employee\Model{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $rate
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\SalaryCalculation\Model\SalaryCalculation[] $salaryCalculation
+ * @property-read int|null $salary_calculation_count
  * @method static \Illuminate\Database\Eloquent\Builder|Employee defaultSort(string $column, string $direction = 'asc')
  * @method static \Database\Factories\Employee\Model\EmployeeFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
@@ -83,11 +86,48 @@ namespace App\Employee\Model{
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereFullNameUk($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereInvoiceData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Employee whereRate($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereTaxNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee whereUpdatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|Employee withTrashed()
  * @method static \Illuminate\Database\Query\Builder|Employee withoutTrashed()
  */
 	class IdeHelperEmployee {}
+}
+
+namespace App\SalaryCalculation\Model{
+/**
+ * App\SalaryCalculation\Model\SalaryCalculation
+ *
+ * @property int $id
+ * @property int $employee_id
+ * @property int|null $working_days
+ * @property int|null $days_worked
+ * @property \Illuminate\Support\Carbon $date
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Employee\Model\Employee|null $employee
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation defaultSort(string $column, string $direction = 'asc')
+ * @method static \Database\Factories\SalaryCalculation\Model\SalaryCalculationFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation filtersApply(iterable $filters = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation filtersApplySelection($class)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation newQuery()
+ * @method static \Illuminate\Database\Query\Builder|SalaryCalculation onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation query()
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereDaysWorked($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereEmployeeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|SalaryCalculation whereWorkingDays($value)
+ * @method static \Illuminate\Database\Query\Builder|SalaryCalculation withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|SalaryCalculation withoutTrashed()
+ */
+	class IdeHelperSalaryCalculation {}
 }
 
