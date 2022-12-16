@@ -52,7 +52,13 @@ class ReimbursementListScreen extends Screen
 
                 TD::make('date', __('Date'))
                     ->sort()
-                    ->render(fn(Reimbursement $one) => $one->date->format('Y-m'))
+                    ->render(fn(Reimbursement $one) => $one->date->format('Y-m-d'))
+                    ->filter()
+                ,
+
+                TD::make('description', __('Description'))
+                    ->sort()
+                    ->render(fn(Reimbursement $one) => $one->description)
                     ->filter()
                 ,
 

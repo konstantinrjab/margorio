@@ -101,8 +101,8 @@ Route::screen('invoices/generation', \App\Invoice\Orchid\InvoiceGenerationScreen
 
 // salary
 Route::screen('salary-calculation/create', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.create');
-Route::screen('salary-calculation/{salaryCalculation?}/edit', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.edit');
-Route::screen('salary-calculation/{salaryCalculation?}', \App\SalaryCalculation\Orchid\SalaryCalculationShowScreen::class)->name('platform.salaryCalculation.show');
+Route::screen('salary-calculation/{employeeReport?}/edit', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.edit');
+Route::screen('salary-calculation/{employeeReport?}', \App\SalaryCalculation\Orchid\SalaryCalculationShowScreen::class)->name('platform.salaryCalculation.show');
 Route::screen('salary-calculations', \App\SalaryCalculation\Orchid\SalaryCalculationListScreen::class)->name('platform.salaryCalculation.list');
 
 // reimbursement

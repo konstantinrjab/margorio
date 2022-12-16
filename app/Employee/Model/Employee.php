@@ -3,7 +3,7 @@
 namespace App\Employee\Model;
 
 use App\Reimbursement\Model\Reimbursement;
-use App\SalaryCalculation\Model\SalaryCalculation;
+use App\SalaryCalculation\Model\EmployeeReport;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -41,12 +41,12 @@ class Employee extends Model
         'tax_number',
     ];
 
-    public function salaryCalculation(): HasMany
+    public function report(): HasMany
     {
-        return $this->hasMany(SalaryCalculation::class);
+        return $this->hasMany(EmployeeReport::class);
     }
 
-    public function reimbursement(): HasMany
+    public function reimbursements(): HasMany
     {
         return $this->hasMany(Reimbursement::class);
     }

@@ -13,7 +13,7 @@ use Orchid\Screen\AsSource;
 /**
  * @mixin IdeHelperSalaryCalculation
  */
-class SalaryCalculation extends Model
+class EmployeeReport extends Model
 {
     use AsSource, Filterable, SoftDeletes, HasFactory;
 

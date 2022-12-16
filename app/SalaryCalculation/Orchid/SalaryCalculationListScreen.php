@@ -4,24 +4,37 @@ declare(strict_types=1);
 
 namespace App\SalaryCalculation\Orchid;
 
-use App\SalaryCalculation\Model\SalaryCalculation;
+use App\Employee\Model\Employee;
+use App\SalaryCalculation\Coponent\SalaryCalculator;
+use Carbon\Carbon;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\DropDown;
 use Orchid\Screen\Actions\Link;
+use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Screen;
 use Orchid\Screen\TD;
+use Orchid\Support\Color;
 use Orchid\Support\Facades\Layout;
-use Orchid\Support\Facades\Toast;
 
 class SalaryCalculationListScreen extends Screen
 {
+    public function __construct(
+        protected SalaryCalculator $salaryCalculator
+    )
+    {
+    }
+
     public function query(): iterable
     {
+        $date = request()->get('calculation_date');
+
         return [
-            'salaryCalculations' => SalaryCalculation::filters()
-                ->with('employee')
-                ->defaultSort('date', 'desc')
+            'employees' => Employee::filters()
+                ->defaultSort('full_name_en')
                 ->paginate(),
+            'calculation_date' => $date
+                ? Carbon::createFromFormat('Y-m', $date)
+                : Carbon::now()->subMonth(),
         ];
     }
 
@@ -42,23 +55,40 @@ class SalaryCalculationListScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::table('salaryCalculations', [
+            Layout::rows([
+                DateTimer::make('calculation_date')
+                    ->format('Y-m')
+                    ->required()
+                    ->title('Calculation Date'),
 
-                TD::make('employee_id', __('Employee'))
+                Button::make(__('Apply'))
+                    ->icon('check')
+                    ->type(Color::DEFAULT())
+                    ->set('formmethod', 'get'),
+            ]),
+
+            Layout::table('employees', [
+
+                TD::make('id', __('Employee'))
                     ->sort()
-                    ->render(fn(SalaryCalculation $one) => $one->employee->full_name_en)
+                    ->render(fn(Employee $one) => $one->full_name_en)
                     ->filter()
                 ,
-                TD::make('date', __('Date'))
+                TD::make('rate', __('Rate'))
                     ->sort()
-                    ->render(fn(SalaryCalculation $one) => $one->date->format('Y-m'))
+                    ->render(fn(Employee $one) => $one->rate)
+                    ->filter()
+                ,
+                TD::make('amount', __('Amount'))
+                    ->sort()
+                    ->render(fn(Employee $one) => $this->salaryCalculator->getAmount($one, $this->query()['calculation_date']))
                     ->filter()
                 ,
 
                 TD::make(__('Actions'))
                     ->align(TD::ALIGN_CENTER)
                     ->width('100px')
-                    ->render(function (SalaryCalculation $one) {
+                    ->render(function (Employee $one) {
                         return DropDown::make()
                             ->icon('options-vertical')
                             ->list([
@@ -70,23 +100,9 @@ class SalaryCalculationListScreen extends Screen
                                 Link::make(__('Edit'))
                                     ->route('platform.salaryCalculation.edit', $one->id)
                                     ->icon('pencil'),
-
-                                Button::make(__('Delete'))
-                                    ->icon('trash')
-                                    ->confirm(__('Once item is deleted, all of its resources and data will be permanently deleted.'))
-                                    ->method('remove', [
-                                        'id' => $one->id,
-                                    ]),
                             ]);
                     }),
             ]),
         ];
-    }
-
-    public function remove(SalaryCalculation $one): void
-    {
-        $one->delete();
-
-        Toast::info(__('Salary Calculation was removed'));
     }
 }

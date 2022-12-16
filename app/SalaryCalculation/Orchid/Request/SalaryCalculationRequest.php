@@ -36,7 +36,7 @@ class SalaryCalculationRequest extends FormRequest
                         ])
                             ->whereMonth('date', '=', Carbon::parse($date)->month);
                     })
-                    ->ignore($this->salaryCalculation instanceof Model ? $this->salaryCalculation : null) // on update
+                    ->ignore($this->one instanceof Model ? $this->one : null) // on update
                 ,
             ],
         ];

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\SalaryCalculation\Orchid;
 
-use App\SalaryCalculation\Model\SalaryCalculation;
+use App\Employee\Model\Employee;
 use Orchid\Screen\Actions\Link;
 use Orchid\Screen\Screen;
 use Orchid\Screen\Sight;
@@ -12,12 +12,12 @@ use Orchid\Support\Facades\Layout;
 
 class SalaryCalculationShowScreen extends Screen
 {
-    public SalaryCalculation $salaryCalculation;
+    public Employee $employee;
 
-    public function query(SalaryCalculation $salaryCalculation): iterable
+    public function query(Employee $employee): iterable
     {
         return [
-            'salaryCalculation' => $salaryCalculation,
+            'employee' => $employee,
         ];
     }
 
@@ -29,10 +29,9 @@ class SalaryCalculationShowScreen extends Screen
     public function commandBar(): iterable
     {
         return [
-
             Link::make(__('Edit'))
                 ->icon('pencil')
-                ->route('platform.salaryCalculation.edit', $this->salaryCalculation->id),
+                ->route('platform.salaryCalculation.edit', $this->employee->id),
         ];
     }
 
@@ -42,10 +41,9 @@ class SalaryCalculationShowScreen extends Screen
     public function layout(): iterable
     {
         return [
-            Layout::legend('salaryCalculation', [
+            Layout::legend('employee', [
 
-                Sight::make('employee', 'Employee')->render(fn($one) => $one->employee->full_name_en),
-                Sight::make('date', 'Date')->render(fn($one) => $one->date->format('Y-m')),
+                Sight::make('full_name_en', 'Full Name'),
 
             ]),
         ];

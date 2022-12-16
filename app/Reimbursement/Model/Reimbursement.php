@@ -32,10 +32,14 @@ class Reimbursement extends Model
 
     public $allowedSorts = [
         'employee_id',
+        'description',
+        'amount',
         'date',
+        'approved',
     ];
 
     protected $allowedFilters = [
+        'description',
         'date',
     ];
 
