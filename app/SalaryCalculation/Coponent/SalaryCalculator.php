@@ -14,7 +14,7 @@ class SalaryCalculator
      * @param Carbon $date
      * @return array{
      *     amount: int,
-     *     reimbursements: int,
+     *     reimbursements: Reimbursement[],
      *     reimbursements_total: int,
      *     working_days: int,
      *     days_worked: int

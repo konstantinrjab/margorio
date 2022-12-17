@@ -52,12 +52,6 @@ class SalaryCalculationEditScreen extends Screen
     {
         return [
 
-            Button::make(__('Remove'))
-                ->icon('trash')
-                ->confirm(__('Once item is deleted, all of its resources and data will be permanently deleted.'))
-                ->method('remove')
-                ->canSee($this->employee->exists),
-
             Button::make(__('Save'))
                 ->icon('check')
                 ->method('save'),
@@ -98,7 +92,7 @@ class SalaryCalculationEditScreen extends Screen
                 ,
                 Matrix::make('reimbursements')
                     ->columns(['description', 'amount'])
-                    ->value($this->employee->reimbursements)
+                    ->value($this->salaryCalculator->calculate($this->employee, $this->calculationDate)['reimbursements'])
                 ,
             ]),
         ];
@@ -113,15 +107,6 @@ class SalaryCalculationEditScreen extends Screen
             ->save();
 
         Toast::info(__('Salary Calculation was saved.'));
-
-        return redirect()->route('platform.salaryCalculation.list');
-    }
-
-    public function remove(EmployeeReport $one)
-    {
-        $one->delete();
-
-        Toast::info(__('Salary Calculation was removed'));
 
         return redirect()->route('platform.salaryCalculation.list');
     }

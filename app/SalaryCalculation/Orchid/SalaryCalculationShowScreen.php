@@ -63,8 +63,22 @@ class SalaryCalculationShowScreen extends Screen
 
                 Sight::make('full_name_en', 'Full Name'),
                 Sight::make('rate', 'Rate'),
-                Sight::make('working_days', 'Working Days')->render(fn(Employee $one) => $data['working_days']),
-                Sight::make('days_worked', 'Days Worked')->render(fn(Employee $one) => $data['days_worked']),
+                Sight::make('working_days', 'Working Days')
+                    ->render(fn(Employee $one) => $data['working_days']),
+                Sight::make('days_worked', 'Days Worked')
+                    ->render(fn(Employee $one) => $data['days_worked']),
+                Sight::make('reimbursements', 'Reimbursements')
+                    ->render(function(Employee $one) use ($data) {
+                        $result = [];
+                        $total = 0;
+                        foreach ($data['reimbursements'] as $reimbursement) {
+                            $result[] = "<li>{$reimbursement->description}: {$reimbursement->amount}</li>";
+                            $total += $reimbursement->amount;
+                        }
+                        $result[] = "<br><p class='fw-bold'>TOTAL: {$total}</p>";
+
+                        return implode("", $result);
+                }),
                 Sight::make('amount', 'Amount')->render(fn(Employee $one) => $data['amount']),
 
             ]),
