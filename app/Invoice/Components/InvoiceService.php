@@ -14,6 +14,24 @@ class InvoiceService
     public const TYPE_FULL = 'full';
     public const TYPE_PROBATION = 'probation';
 
+
+    function getInvoiceNumber(Employee $employee, string $type): int
+    {
+        $generatedAt = $employee->invoice_data[$type]['generated_at'] ?? null;
+        $lastNumber = $employee->invoice_data[$type]['number'] ?? null;
+
+        if ($lastNumber && $generatedAt) {
+            $generatedAt = Carbon::parse($employee->invoice_data[$type]['generated_at']);
+
+            $diff = Carbon::now()->setDay(1)->diff($generatedAt->setDay(1));
+            $lastNumber = $employee->invoice_data[$type]['number'] ?? 0;
+
+            return $lastNumber + ($diff->m + $diff->y * 12);
+        }
+
+        return $lastNumber ? $lastNumber + 1 : 1;
+    }
+
     /**
      * @param array{id: int, amount: int, number: int} $employeesData
      * @param string $type
@@ -78,17 +96,12 @@ class InvoiceService
      */
     protected function generatePdf(Employee $employee, string $type, Carbon $date, int $invoiceNumber, int $amount): Pdf
     {
-        if ($type == static::TYPE_FULL) {
-            $templateName = 'invoice.invoice_full';
-            $invoiceData = $employee->invoice_data['full'];
-
-        } elseif ($type == static::TYPE_PROBATION) {
-            $templateName = 'invoice.invoice_probation';
-            $invoiceData = $employee->invoice_data['probation'];
-
-        } else {
-            throw new RuntimeException('invalid invoice type');
-        }
+        $templateName = match ($type) {
+            static::TYPE_FULL => 'invoice.invoice_full',
+            static::TYPE_PROBATION => 'invoice.invoice_probation',
+            default => throw new RuntimeException('invalid invoice type'),
+        };
+        $invoiceData = $employee->invoice_data[static::TYPE_PROBATION];
 
         $html = view($templateName, [
             'invoice_number'         => $invoiceNumber,

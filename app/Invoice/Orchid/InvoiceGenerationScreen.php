@@ -7,6 +7,7 @@ namespace App\Invoice\Orchid;
 use App\Employee\Model\Employee;
 use App\Invoice\Components\InvoiceService;
 use App\Invoice\Orchid\Request\GenerateInvoiceRequest;
+use App\SalaryCalculation\Coponent\SalaryCalculator;
 use Carbon\Carbon;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Actions\Link;
@@ -22,10 +23,24 @@ use Orchid\Support\Facades\Layout;
 
 class InvoiceGenerationScreen extends Screen
 {
+    protected Carbon $calculationDate;
+
+    public function __construct(
+        protected InvoiceService $invoiceService,
+        protected SalaryCalculator $salaryCalculator,
+    )
+    {
+        $this->calculationDate = request()->get('calculation_date')
+            ? Carbon::parse(request()->get('calculation_date'))->subMonth()
+            : Carbon::now()->subMonth();
+    }
+
     public function query(): iterable
     {
         return [
-            'employees' => Employee::filters()->defaultSort('full_name_en')->get(),
+            'employees' => Employee::filters()
+                ->defaultSort('full_name_en')
+                ->get(),
         ];
     }
 
@@ -36,24 +51,21 @@ class InvoiceGenerationScreen extends Screen
 
     public function layout(): iterable
     {
-        $getInvoiceNumberInput = function (Employee $employee, string $type) {
-            $generatedAt = $employee->invoice_data[$type]['generated_at'] ?? 0;
-            $lastNumber = $employee->invoice_data[$type]['number'] ?? 0;
-
-            if ($lastNumber && $generatedAt) {
-                $generatedAt = Carbon::parse($employee->invoice_data[$type]['generated_at']);
-
-                $diff = Carbon::now()->setDay(1)->diff($generatedAt->setDay(1));
-                $lastNumber = $employee->invoice_data[$type]['number'] ?? 0;
-                $invoiceNumber = $lastNumber + ($diff->m + $diff->y * 12);
-            }
-
-            return Input::make("employees[$employee->id][$type][number]")
-                ->value($invoiceNumber ?? 1)
-                ->type('number');
-        };
-
         return [
+
+            Layout::rows([
+                DateTimer::make('calculation_date')
+                    ->format('Y-m')
+                    ->value($this->calculationDate->format('Y-m'))
+                    ->required()
+                    ->title('Calculation Date'),
+
+                Button::make(__('Select'))
+                    ->icon('arrow-down-circle')->type(Color::DEFAULT())
+                    ->formmethod('get')
+                    ->set('turbo', false)
+                ,
+            ]),
 
             Layout::rows([
                 Group::make([
@@ -85,24 +97,22 @@ class InvoiceGenerationScreen extends Screen
                     ->filter()
                 ,
                 TD::make('number full', __('Number Full'))
-                    ->render(
-                        function (Employee $employee) use ($getInvoiceNumberInput) {
-                            return $getInvoiceNumberInput($employee, 'full');
-                        }
+                    ->render(fn(Employee $e) => Input::make("employees[$e->id][" . InvoiceService::TYPE_FULL . "][number]")
+                        ->value($this->invoiceService->getInvoiceNumber($e, InvoiceService::TYPE_FULL))
+                        ->type('number')
                     )
                 ,
                 TD::make('number probation', __('Number Probation'))
-                    ->render(
-                        function (Employee $employee) use ($getInvoiceNumberInput) {
-                            return $getInvoiceNumberInput($employee, 'probation');
-                        }
+                    ->render(fn(Employee $e) => Input::make("employees[$e->id][" . InvoiceService::TYPE_PROBATION . "][number]")
+                        ->value($this->invoiceService->getInvoiceNumber($e, InvoiceService::TYPE_PROBATION))
+                        ->type('number')
                     )
                 ,
                 TD::make('amount', __('Amount'))
                     ->render(
                         function (Employee $employee) {
                             return Input::make("employees[$employee->id][amount]")
-                                ->value(100)
+                                ->value($this->salaryCalculator->calculate($employee, $this->calculationDate)['amount'])
                                 ->type('number');
                         }
                     )
@@ -119,12 +129,18 @@ class InvoiceGenerationScreen extends Screen
                             ->parameters(["employees[$employee->id][selected]" => 1])
                     )
                 ,
-                TD::make('edit')
+                TD::make('Employee')
                     ->render(
-                        fn(Employee $e) => Link::make(__('Edit'))
+                        fn(Employee $e) => Link::make(__('Employee'))
                             ->route('platform.employee.edit', $e->id)
                             ->icon('pencil'),
-
+                    )
+                ,
+                TD::make('Calculation')
+                    ->render(
+                        fn(Employee $e) => Link::make(__('Calculation'))
+                            ->route('platform.salaryCalculation.edit', [$e->id, 'calculation_date' => $this->calculationDate->format('Y-m')])
+                            ->icon('pencil'),
                     )
                 ,
             ]),
