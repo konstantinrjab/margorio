@@ -5,30 +5,47 @@ declare(strict_types=1);
 namespace App\SalaryCalculation\Orchid;
 
 use App\Employee\Model\Employee;
+use App\SalaryCalculation\Coponent\SalaryCalculator;
 use App\SalaryCalculation\Model\EmployeeReport;
 use App\SalaryCalculation\Orchid\Request\SalaryCalculationRequest;
+use Carbon\Carbon;
 use Orchid\Screen\Actions\Button;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Fields\Input;
-use Orchid\Screen\Fields\Relation;
+use Orchid\Screen\Fields\Matrix;
+use Orchid\Screen\Fields\Select;
 use Orchid\Screen\Screen;
 use Orchid\Support\Facades\Layout;
 use Orchid\Support\Facades\Toast;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SalaryCalculationEditScreen extends Screen
 {
-    public EmployeeReport $employeeReport;
+    public Employee $employee;
+    public Carbon $calculationDate;
 
-    public function query(EmployeeReport $employeeReport): iterable
+    public function __construct(
+        protected SalaryCalculator $salaryCalculator
+    )
+    {
+        $calculationDate = request()->get('calculation_date');
+        if (!$calculationDate) {
+            throw new NotFoundHttpException();
+        }
+
+        $this->calculationDate = Carbon::createFromFormat('Y-m', $calculationDate);
+    }
+
+    public function query(Employee $employee): iterable
     {
         return [
-            'employeeReport' => $employeeReport,
+            'employee' => $employee,
         ];
     }
 
     public function name(): ?string
     {
-        return ($this->employeeReport->exists ? __('Edit') : __('Create')) . ': ' . __('Salary Calculation');
+        return ($this->employee->exists ? __('Edit') : __('Create')) . ': ' . __('Salary Calculation');
     }
 
     public function commandBar(): iterable
@@ -39,7 +56,7 @@ class SalaryCalculationEditScreen extends Screen
                 ->icon('trash')
                 ->confirm(__('Once item is deleted, all of its resources and data will be permanently deleted.'))
                 ->method('remove')
-                ->canSee($this->employeeReport->exists),
+                ->canSee($this->employee->exists),
 
             Button::make(__('Save'))
                 ->icon('check')
@@ -52,31 +69,37 @@ class SalaryCalculationEditScreen extends Screen
      */
     public function layout(): iterable
     {
+        $data = $this->salaryCalculator->calculate($this->employee, $this->calculationDate);
+
         return [
             Layout::rows([
-                Relation::make('employee_id')
-                    ->required()
-                    ->fromModel(Employee::class, 'full_name_en')
-                    ->value($this->employeeReport->employee_id ?? null)
+                Select::make('full_name_en')
+                    ->disabled($this->employee->exists)
+                    ->value($this->employee->full_name_en)
+                    ->options(Employee::all()->keyBy('id')->map(fn($e) => $e->full_name_en))
                     ->title(__('Employee'))
                 ,
-
+                DateTimer::make('date')
+                    ->required()
+                    ->format('Y-m')
+                    ->disabled()
+                    ->value($this->calculationDate->format('Y-m'))
+                    ->title('Date')
+                ,
                 Input::make('working_days')
                     ->type('number')
-                    ->value($this->employeeReport->working_days ?? null)
-                    ->title(__('Working Days')),
-
+                    ->value($data['working_days'])
+                    ->title(__('Working Days'))
+                ,
                 Input::make('days_worked')
                     ->type('number')
-                    ->value($this->employeeReport->days_worked ?? null)
-                    ->title(__('Days Worked')),
-
-                DateTimer::make('date')
-                    ->format('Y-m-d')
-                    ->value($this->employeeReport->date ?? null)
-                    ->required()
-                    ->title('Date'),
-
+                    ->value($data['days_worked'])
+                    ->title(__('Days Worked'))
+                ,
+                Matrix::make('reimbursements')
+                    ->columns(['description', 'amount'])
+                    ->value($this->employee->reimbursements)
+                ,
             ]),
         ];
     }

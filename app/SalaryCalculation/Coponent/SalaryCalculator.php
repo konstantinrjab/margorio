@@ -3,38 +3,48 @@
 namespace App\SalaryCalculation\Coponent;
 
 use App\Employee\Model\Employee;
+use App\Reimbursement\Model\Reimbursement;
 use App\SalaryCalculation\Model\EmployeeReport;
 use Carbon\Carbon;
 
 class SalaryCalculator
 {
-    protected array $employeeDataCache = [];
-
-    public function getAmount(Employee $employee, Carbon $date): int
+    /**
+     * @param Employee $employee
+     * @param Carbon $date
+     * @return array{
+     *     amount: int,
+     *     reimbursements: int,
+     *     reimbursements_total: int,
+     *     working_days: int,
+     *     days_worked: int
+     * }
+     */
+    public function calculate(Employee $employee, Carbon $date): array
     {
-        $salaryCalculation = $this->getSalaryCalculation($employee, $date);
+        /** @var EmployeeReport $report */
+        $report = $employee->reports
+            ->first(fn(EmployeeReport $e) => $e->date->format('Y-m') == $date->format('Y-m'));
+        $reimbursements = $employee->reimbursements
+            ->filter(fn(Reimbursement $e) => $e->date->format('Y-m') == $date->format('Y-m'));
 
-        $salary = $employee->rate;
-//        if (!$salaryCalculation) {
-//        }
+        $reimbursementsTotal = $reimbursements->sum(fn(Reimbursement $e) => $e->amount);
 
-        // TODO
-        return $salary;
-//        return $salaryCalculation->working_days / $salaryCalculation->days_worked * $employee->rate;
-    }
-
-    protected function getSalaryCalculation(Employee $employee, Carbon $date): ?EmployeeReport
-    {
-        if (isset($this->employeeDataCache[$employee->id])) {
-            return $this->employeeDataCache[$employee->id];
+        if (!$report) {
+            $amount = $employee->rate;
+        } else {
+            $amount = round($report->working_days / $report->days_worked * $employee->rate);
         }
 
-        $this->employeeDataCache[$employee->id] = EmployeeReport::where([
-            'employee_id' => $employee->id,
-        ])
-            ->whereMonth('date', $date)
-            ->first();
+        $amount += $reimbursementsTotal;
 
-        return $this->employeeDataCache[$employee->id];
+        return [
+            'amount'               => $amount,
+            'reimbursements'       => $reimbursements,
+            'reimbursements_total' => $reimbursementsTotal,
+            'working_days'         => $report->working_days ?? null,
+            'days_worked'          => $report->days_worked ?? null,
+            // TODO: overtimes
+        ];
     }
 }

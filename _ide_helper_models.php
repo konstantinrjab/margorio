@@ -65,14 +65,14 @@ namespace App\Employee\Model{
  * @property string $full_name_uk
  * @property string $tax_number
  * @property array $invoice_data
+ * @property int $rate
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $rate
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Reimbursement\Model\Reimbursement[] $reimbursement
- * @property-read int|null $reimbursement_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\SalaryCalculation\Model\EmployeeReport[] $salaryCalculations
- * @property-read int|null $salary_calculations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Reimbursement\Model\Reimbursement[] $reimbursements
+ * @property-read int|null $reimbursements_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\SalaryCalculation\Model\EmployeeReport[] $reports
+ * @property-read int|null $reports_count
  * @method static \Illuminate\Database\Eloquent\Builder|Employee defaultSort(string $column, string $direction = 'asc')
  * @method static \Database\Factories\Employee\Model\EmployeeFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Employee filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
@@ -110,7 +110,7 @@ namespace App\Reimbursement\Model{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Employee\Model\Employee|null $employee
+ * @property-read \App\Employee\Model\Employee $employee
  * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement defaultSort(string $column, string $direction = 'asc')
  * @method static \Database\Factories\Reimbursement\Model\ReimbursementFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Reimbursement filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
@@ -137,7 +137,7 @@ namespace App\Reimbursement\Model{
 
 namespace App\SalaryCalculation\Model{
 /**
- * App\SalaryCalculation\Model\SalaryCalculation
+ * App\SalaryCalculation\Model\EmployeeReport
  *
  * @property int $id
  * @property int $employee_id
@@ -147,7 +147,7 @@ namespace App\SalaryCalculation\Model{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property-read \App\Employee\Model\Employee|null $employee
+ * @property-read \App\Employee\Model\Employee $employee
  * @method static \Illuminate\Database\Eloquent\Builder|EmployeeReport defaultSort(string $column, string $direction = 'asc')
  * @method static \Database\Factories\SalaryCalculation\Model\EmployeeReportFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|EmployeeReport filters(?mixed $kit = null, ?\Orchid\Filters\HttpFilter $httpFilter = null)
@@ -168,6 +168,6 @@ namespace App\SalaryCalculation\Model{
  * @method static \Illuminate\Database\Query\Builder|EmployeeReport withTrashed()
  * @method static \Illuminate\Database\Query\Builder|EmployeeReport withoutTrashed()
  */
-	class IdeHelperSalaryCalculation {}
+	class IdeHelperEmployeeReport {}
 }
 

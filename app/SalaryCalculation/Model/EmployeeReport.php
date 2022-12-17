@@ -11,7 +11,7 @@ use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
 /**
- * @mixin IdeHelperSalaryCalculation
+ * @mixin IdeHelperEmployeeReport
  */
 class EmployeeReport extends Model
 {

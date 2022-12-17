@@ -41,7 +41,7 @@ class Employee extends Model
         'tax_number',
     ];
 
-    public function report(): HasMany
+    public function reports(): HasMany
     {
         return $this->hasMany(EmployeeReport::class);
     }

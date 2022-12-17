@@ -18,23 +18,25 @@ use Orchid\Support\Facades\Layout;
 
 class SalaryCalculationListScreen extends Screen
 {
+    public Carbon $calculationDate;
+
     public function __construct(
         protected SalaryCalculator $salaryCalculator
     )
     {
+        $calculationDate = request()->get('calculation_date');
+        $this->calculationDate = $calculationDate
+            ? Carbon::createFromFormat('Y-m', $calculationDate)
+            : Carbon::now()->subMonth();
     }
 
     public function query(): iterable
     {
-        $date = request()->get('calculation_date');
-
         return [
             'employees' => Employee::filters()
+                ->with(['reports', 'reimbursements'])
                 ->defaultSort('full_name_en')
                 ->paginate(),
-            'calculation_date' => $date
-                ? Carbon::createFromFormat('Y-m', $date)
-                : Carbon::now()->subMonth(),
         ];
     }
 
@@ -48,7 +50,7 @@ class SalaryCalculationListScreen extends Screen
         return [
             Link::make(__('Add'))
                 ->icon('plus')
-                ->route('platform.salaryCalculation.create'),
+                ->route('platform.salaryCalculation.create', ['calculation_date' => $this->calculationDate->format('Y-m')]),
         ];
     }
 
@@ -58,6 +60,7 @@ class SalaryCalculationListScreen extends Screen
             Layout::rows([
                 DateTimer::make('calculation_date')
                     ->format('Y-m')
+                    ->value($this->calculationDate->format('Y-m'))
                     ->required()
                     ->title('Calculation Date'),
 
@@ -79,9 +82,24 @@ class SalaryCalculationListScreen extends Screen
                     ->render(fn(Employee $one) => $one->rate)
                     ->filter()
                 ,
+                TD::make('working_days', __('Working Days'))
+                    ->sort()
+                    ->render(fn(Employee $one) => $this->salaryCalculator->calculate($one, $this->calculationDate)['working_days'])
+                    ->filter()
+                ,
+                TD::make('days_worked', __('Days Worked'))
+                    ->sort()
+                    ->render(fn(Employee $one) => $this->salaryCalculator->calculate($one, $this->calculationDate)['days_worked'])
+                    ->filter()
+                ,
+                TD::make('reimbursements_total', __('Reimbursements'))
+                    ->sort()
+                    ->render(fn(Employee $one) => $this->salaryCalculator->calculate($one, $this->calculationDate)['reimbursements_total'])
+                    ->filter()
+                ,
                 TD::make('amount', __('Amount'))
                     ->sort()
-                    ->render(fn(Employee $one) => $this->salaryCalculator->getAmount($one, $this->query()['calculation_date']))
+                    ->render(fn(Employee $one) => $this->salaryCalculator->calculate($one, $this->calculationDate)['amount'])
                     ->filter()
                 ,
 
@@ -94,11 +112,11 @@ class SalaryCalculationListScreen extends Screen
                             ->list([
 
                                 Link::make(__('See'))
-                                    ->route('platform.salaryCalculation.show', $one->id)
+                                    ->route('platform.salaryCalculation.show', [$one->id, 'calculation_date' => $this->calculationDate->format('Y-m')])
                                     ->icon('eye'),
 
                                 Link::make(__('Edit'))
-                                    ->route('platform.salaryCalculation.edit', $one->id)
+                                    ->route('platform.salaryCalculation.edit', [$one->id, 'calculation_date' => $this->calculationDate->format('Y-m')])
                                     ->icon('pencil'),
                             ]);
                     }),
