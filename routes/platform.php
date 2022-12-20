@@ -98,6 +98,8 @@ Route::screen('employees', \App\Employee\Orchid\EmployeeListScreen::class)->name
 
 // invoices
 Route::screen('invoices/generation', \App\Invoice\Orchid\InvoiceGenerationScreen::class)->name('platform.invoice.generation');
+Route::get('platformapi/invoices', [\App\Invoice\Orchid\Controller\InvoiceController::class, 'index']);
+Route::post('platformapi/invoices/generate', [\App\Invoice\Orchid\Controller\InvoiceController::class, 'generate']);
 
 // salary
 Route::screen('salary-calculation/create', \App\SalaryCalculation\Orchid\SalaryCalculationEditScreen::class)->name('platform.salaryCalculation.create');

@@ -47,10 +47,10 @@ class InvoiceService
             $employee = $employees->first(fn($e) => $e->id == $employeeData['id']);
 
             $pdfs[] = [
-                'file' => $this->generatePdf($employee, $type, $date, $employeeData['number'], $employeeData['amount']),
+                'file' => $this->generatePdf($employee, $type, $date, $employeeData['invoice_number'], $employeeData['amount']),
                 'name' => $this->getPdfName($employee, $date),
             ];
-            $this->updateEmployee($employee, $type, $employeeData['number']);
+            $this->updateEmployee($employee, $type, $employeeData['invoice_number']);
         }
 
         return $pdfs;
@@ -97,8 +97,8 @@ class InvoiceService
     protected function generatePdf(Employee $employee, string $type, Carbon $date, int $invoiceNumber, int $amount): Pdf
     {
         $templateName = match ($type) {
-            static::TYPE_FULL => 'invoice.invoice_full',
-            static::TYPE_PROBATION => 'invoice.invoice_probation',
+            static::TYPE_FULL => 'invoice.pdf.full',
+            static::TYPE_PROBATION => 'invoice.pdf.probation',
             default => throw new RuntimeException('invalid invoice type'),
         };
         $invoiceData = $employee->invoice_data[static::TYPE_PROBATION];

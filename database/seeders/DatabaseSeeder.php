@@ -20,8 +20,8 @@ class DatabaseSeeder extends Seeder
     {
         Artisan::call('orchid:admin', ['name' => 'admin', 'email' => 'admin@admin.com', 'password' => '123123']);
 
-        Employee::factory(5)
-            ->has(EmployeeReport::factory(5), 'report')
+        Employee::factory(10)
+            ->has(EmployeeReport::factory(5), 'reports')
             ->has(Reimbursement::factory(10))
             ->create();
     }
