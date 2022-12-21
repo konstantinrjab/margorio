@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('tax_number');
             $table->json('invoice_data');
             $table->unsignedInteger('rate')->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

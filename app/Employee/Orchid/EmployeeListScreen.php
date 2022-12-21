@@ -18,7 +18,10 @@ class EmployeeListScreen extends Screen
     public function query(): iterable
     {
         return [
-            'employees' => Employee::filters()->defaultSort('created_at', 'desc')->paginate(),
+            'employees' => Employee::filters()
+                ->orderBy('active', 'desc')
+                ->orderBy('full_name_en')
+                ->paginate(),
         ];
     }
 
@@ -43,10 +46,20 @@ class EmployeeListScreen extends Screen
 
                 TD::make('full_name_en', __('Full Name EN'))
                     ->sort()
+                    ->render(function(Employee $one) {
+                        return $one->active
+                            ? $one->full_name_en
+                            : "<span class='text-secondary'>{$one->full_name_en}</span>";
+                    })
                     ->filter()
                 ,
                 TD::make('full_name_uk', __('Full Name UK'))
                     ->sort()
+                    ->render(function(Employee $one) {
+                        return $one->active
+                            ? $one->full_name_uk
+                            : "<span class='text-secondary'>{$one->full_name_uk}</span>";
+                    })
                     ->filter()
                 ,
                 TD::make('tax_number', __('Tax Number'))
@@ -84,8 +97,9 @@ class EmployeeListScreen extends Screen
 
     public function remove(Employee $one): void
     {
-        $one->delete();
+        $one->active = false;
+        $one->save();
 
-        Toast::info(__('Employee was removed'));
+        Toast::info(__('Employee was deactivated'));
     }
 }

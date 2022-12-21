@@ -69,7 +69,7 @@ class SalaryCalculationEditScreen extends Screen
             Layout::rows([
                 Select::make('full_name_en')
                     ->disabled($this->employee->exists)
-                    ->value($this->employee->full_name_en)
+                    ->value($this->employee->id)
                     ->options(Employee::all()->keyBy('id')->map(fn($e) => $e->full_name_en))
                     ->title(__('Employee'))
                 ,
@@ -93,12 +93,13 @@ class SalaryCalculationEditScreen extends Screen
                 Matrix::make('reimbursements')
                     ->columns(['description', 'amount'])
                     ->value($this->salaryCalculator->calculate($this->employee, $this->calculationDate)['reimbursements'])
+                    ->title(__('Reimbursements'))
                 ,
             ]),
         ];
     }
 
-    public function save(EmployeeReport $one, SalaryCalculationRequest $request)
+    public function save(SalaryCalculationRequest $request)
     {
         $data = $request->validated();
 

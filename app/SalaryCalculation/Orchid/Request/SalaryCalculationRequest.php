@@ -13,16 +13,16 @@ class SalaryCalculationRequest extends FormRequest
     public function rules()
     {
         return [
-            'employee_id'  => ['required', 'exists:employees,id'],
-            'days_worked'  => [
+            'employee_id'                  => ['required', 'exists:employees,id'],
+            'days_worked'                  => [
                 'sometimes',
                 'required_with:"working_days"',
                 'nullable',
                 'int',
                 'max:31'
             ],
-            'working_days' => ['sometimes', 'required_with:"days_worked"', 'nullable', 'int', 'max:31'],
-            'date'         => [
+            'working_days'                 => ['sometimes', 'required_with:"days_worked"', 'nullable', 'int', 'max:31'],
+            'date'                         => [
                 'required',
                 'date',
                 'date_format:Y-m-d',
@@ -39,6 +39,9 @@ class SalaryCalculationRequest extends FormRequest
                     ->ignore($this->one instanceof Model ? $this->one : null) // on update
                 ,
             ],
+            'reimbursements'               => ['array'],
+            'reimbursements.*.description' => ['required', 'string'],
+            'reimbursements.*.amount'      => ['required', 'int'],
         ];
     }
 }

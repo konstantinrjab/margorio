@@ -46,7 +46,11 @@ class ReimbursementListScreen extends Screen
 
                 TD::make('employee_id', __('Employee'))
                     ->sort()
-                    ->render(fn(Reimbursement $one) => $one->employee->full_name_en)
+                    ->render(function(Reimbursement $one) {
+                        return $one->employee->active
+                            ? $one->employee->full_name_en
+                            : "<span class='text-secondary'>{$one->employee->full_name_en}</span>";
+                    })
                     ->filter()
                 ,
 

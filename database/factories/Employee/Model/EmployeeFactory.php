@@ -46,6 +46,7 @@ class EmployeeFactory extends Factory
                 ],
             ],
             'rate' => fake()->numberBetween(1000, 2000),
+            'active' => true,
         ];
     }
 }

@@ -18,19 +18,21 @@ class InvoiceController extends Controller
         $date = Carbon::createFromFormat('Y-m-d', $request->input('date'));
 
         /** @var Collection<int, Employee> $employees */
-        $employees = Employee::all();
+        $employees = Employee::where(['active' => true])
+            ->orderBy('full_name_en')
+            ->get();
 
         $result = [];
 
         foreach ($employees as $employee) {
             $result[] = [
-                'id'           => $employee->id,
-                'full_name_en' => $employee->full_name_en,
-                'full_name_uk' => $employee->full_name_uk,
-                'tax_number'   => $employee->tax_number,
-                'invoice_data' => $employee->invoice_data,
+                'id'             => $employee->id,
+                'full_name_en'   => $employee->full_name_en,
+                'full_name_uk'   => $employee->full_name_uk,
+                'tax_number'     => $employee->tax_number,
+                'invoice_data'   => $employee->invoice_data,
                 'invoice_number' => $invoiceService->getInvoiceNumber($employee, $request->input('invoice_type')),
-                'amount' => $salaryCalculator->calculate($employee, $date)['amount'],
+                'amount'         => $salaryCalculator->calculate($employee, $date)['amount'],
             ];
         }
 

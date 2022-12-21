@@ -151,9 +151,10 @@ class EmployeeEditScreen extends Screen
 
     public function remove(Employee $one)
     {
-        $one->delete();
+        $one->active = false;
+        $one->save();
 
-        Toast::info(__('Employee was removed'));
+        Toast::info(__('Employee was deactivated'));
 
         return redirect()->route('platform.employee.list');
     }

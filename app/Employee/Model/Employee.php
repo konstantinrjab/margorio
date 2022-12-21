@@ -23,10 +23,12 @@ class Employee extends Model
         'full_name_uk',
         'tax_number',
         'invoice_data',
+        'active',
     ];
 
     protected $casts = [
         'invoice_data' => 'array',
+        'active'       => 'bool',
     ];
 
     public $allowedSorts = [
